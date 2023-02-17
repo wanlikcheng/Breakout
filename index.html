@@ -1,0 +1,36 @@
+<head>
+    <script type="module">
+        import {Breakout} from "./blockbreaker.js";
+        let game;
+        function init() {
+            const canvas = document.getElementById('dvd');
+            game = new Breakout(canvas, keyMap);
+            
+            setInterval(update, 0);
+        }
+        
+        function update() {
+            game.mainLoop();
+        }
+        
+        window.onload = init;
+        
+        const keyMap = {};
+        
+        function handleKeyPress(e) {
+            keyMap[e.key] = true;
+        }
+        
+        function handleKeyUp(e) {
+            keyMap[e.key] = false;
+        }
+        
+        window.onkeydown = handleKeyPress;
+        window.onkeyup = handleKeyUp;
+    </script>
+</head>
+
+<body>
+    <p id="fps"></p>
+    <canvas style="border: 1px solid black" id="dvd" />
+</body>
