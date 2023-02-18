@@ -49,7 +49,7 @@ export class Breakout {
                 this.blocks[i * 10 + j].isBall = false; // for ball
                 this.blocks[i * 10 + j].isBreakable = true; // for blocks
                 this.blocks[i * 10 + j].isActive = true; // for blocks
-                this.blocks[i * 10 + j].color = [255, 0, 0];
+                this.blocks[i * 10 + j].randomizeColor();
             }
         }
 
