@@ -95,7 +95,8 @@ export class Breakout {
         // Reset game state variables
         this.gameOver = false;
         // this.paused = true;
-        this.replayGame = true;;
+        this.replayGame = true;
+        this.lives = 3;
     }
 
     resetBall() {
@@ -209,6 +210,7 @@ export class Breakout {
             // ball at the bottom
             // this.gameOver = true;
             this.lives--;
+            console.log(this.lives);
             if(this.lives === 0) {
                 this.winner = 2;
                 this.replayGame = true;
