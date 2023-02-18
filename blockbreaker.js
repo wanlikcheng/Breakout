@@ -18,16 +18,17 @@ export class Breakout {
         this.ball = new Box();
         this.ball.xVel = 3; // units: pixels per frame
         this.ball.yVel = 3;
-        this.ball.minX = 300;
+        this.ball.minX = canvas.width / 2;
         this.ball.minY = 200;
-        this.ball.width = 20;
-        this.ball.height = 20;
+        this.ball.width = 15;
+        this.ball.height = 15;
+        this.ball.color = [192,192,192];
         this.ball.isBall = true;
 
         // LOWER PADDLE
         this.paddle = new Box();
-        this.paddle.minX = canvas.width / 2;
-        this.paddle.minY = canvas.height - 50;
+        this.paddle.minX = canvas.width / 2 - 55;
+        this.paddle.minY = canvas.height - 30;
         this.paddle.width = 120;
         this.paddle.height = 10;
         this.isPaddle = true;
@@ -35,18 +36,23 @@ export class Breakout {
         this.paddle.color = [255, 255, 255];       
 
         this.blocks = [];
-        for(let i = 0; i < 5; i++) {
-            this.blocks[i] = new Box();
-            this.blocks[i].minX = 40 + i * 81;
-            this.blocks[i].minY = 90;
-            this.blocks[i].width = 80;
-            this.blocks[i].height = 30;
-            this.blocks[i].isPaddle = false; // for paddle
-            this.blocks[i].isBall = false; // for ball
-            this.blocks[i].isBreakable = true; // for blocks
-            this.blocks[i].isActive = true; // for blocks
-            this.blocks[i].color = [255, 0, 0];
+        // change i to 10 for whole row
+        for(let i = 0; i < 4; i++) {
+            let spacing = 18
+            for(let j = 0; j < 10; j++) {
+                this.blocks[i * 10 + j] = new Box();
+                this.blocks[i * 10 + j].minX = 10 + j * 62;
+                this.blocks[i * 10 + j].minY = 45 + i * spacing;
+                this.blocks[i * 10 + j].width = 60;
+                this.blocks[i * 10 + j].height = 15;
+                this.blocks[i * 10 + j].isPaddle = false; // for paddle
+                this.blocks[i * 10 + j].isBall = false; // for ball
+                this.blocks[i * 10 + j].isBreakable = true; // for blocks
+                this.blocks[i * 10 + j].isActive = true; // for blocks
+                this.blocks[i * 10 + j].color = [255, 0, 0];
+            }
         }
+
 
         // prevDraw is a member variable used for throttling framerate
         this.prevDraw = 0;
@@ -136,7 +142,7 @@ export class Breakout {
         
         this.ball.update(obstacles);
         console.log("Update:", obstacles)
-        console.log("Blocks:", this.blocks)
+        console.log("Blocks:", this.blocks, this.blocks.length)
 
 
         // uncomment this for loss mechanism
@@ -233,11 +239,12 @@ class Box {
                 this.minX -= this.xVel;
                 if(o.isBreakable === true) {
                     o.randomizeColor();
+                    o.minY = -1000;
                 }
                 // reverse xVel to bounce
                 this.xVel *= -1;
                 
-                this.randomizeColor();
+                // this.randomizeColor();
             }
         }
 
@@ -250,11 +257,12 @@ class Box {
                 this.minY -= this.yVel;
                 if(o.isBreakable === true) {
                     o.randomizeColor();
+                    o.minY = -1000;
                 }
                 // reverse yVel to bounce
                 this.yVel *= -1;
                 
-                this.randomizeColor();
+                // this.randomizeColor();
             }   
         }
     }
