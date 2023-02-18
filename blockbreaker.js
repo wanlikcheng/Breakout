@@ -8,7 +8,7 @@ export class Breakout {
         
         // set size of canvas
         canvas.width = 640;
-        canvas.height = 280;
+        canvas.height = 480;
         
         // save canvas context as member
         this.ctx = canvas.getContext('2d'); 
@@ -28,25 +28,25 @@ export class Breakout {
         // LOWER PADDLE
         this.paddle = new Box();
         this.paddle.minX = canvas.width / 2 - 55;
-        this.paddle.minY = canvas.height - 30;
+        this.paddle.minY = canvas.height - 50;
         this.paddle.width = 120;
         this.paddle.height = 10;
         this.isPaddle = true;
         this.paddle.isBreakable = false;
         this.paddle.color = [255, 255, 255];       
 
-        let rows = 1;
-        let cols = 3;
+        let rows = 4;
+        let cols = 10;
         this.blocks = [];
         // 4 rows, by 10 cols of blocks
         for(let i = 0; i < rows; i++) {
-            let spacing = 18
+            let spacing = 35;
             for(let j = 0; j < cols; j++) {
                 this.blocks[i * cols + j] = new Box();
                 this.blocks[i * cols + j].minX = 10 + j * 62;
                 this.blocks[i * cols + j].minY = 45 + i * spacing;
                 this.blocks[i * cols + j].width = 60;
-                this.blocks[i * cols + j].height = 15;
+                this.blocks[i * cols + j].height = 25;
                 this.blocks[i * cols + j].isPaddle = false; // for paddle
                 this.blocks[i * cols + j].isBall = false; // for ball
                 this.blocks[i * cols + j].isBreakable = true; // for blocks
@@ -179,19 +179,20 @@ export class Breakout {
         if (this.paused) {
             this.ctx.font = "30px serif";
             this.ctx.textAlign = "center";            
-            this.ctx.fillStyle = "rgb(255,0,0)";
+            this.ctx.fillStyle = "rgb(192,192,192)";
             this.ctx.fillText("PAUSED", this.canvas.width/2, this.canvas.height/2);
         }
 
         // potentially draw victory text
         if (this.gameOver) {
-            let x = "You lose";
+            let x = "YOU LOSE";
+            this.ctx.fillStyle = 'rgb(255,255,255)';
             if (this.winner == 1) {
-                x = "You win";
+                x = "YOU WIN";
+                this.ctx.fillStyle = 'rgb(0,255,0)';
             }
             this.ctx.font = "30px serif";
             this.ctx.textAlign = "center";
-            this.ctx.fillStyle = 'rgb(255,255,255)';
             this.ctx.fillText(x, this.canvas.width/2, this.canvas.height/2)            
         }
         
