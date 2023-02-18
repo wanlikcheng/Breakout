@@ -24,31 +24,15 @@ export class Breakout {
         this.ball.height = 20;
         this.ball.isBall = true;
 
-        // Set up the obstacle (paddle on the left side)
         // LOWER PADDLE
-        this.obstacle = new Box();
-        this.obstacle.minX = canvas.width / 2;
-        this.obstacle.minY = canvas.height - 50;
-        this.obstacle.width = 120;
-        this.obstacle.height = 10;
+        this.paddle = new Box();
+        this.paddle.minX = canvas.width / 2;
+        this.paddle.minY = canvas.height - 50;
+        this.paddle.width = 120;
+        this.paddle.height = 10;
         this.isPaddle = true;
-        this.obstacle.color = [255, 255, 255];       
-        
-        // Set up the CPU's paddle
-        // UPPER BOXES
-        this.cpuPaddle = new Box();
-        this.cpuPaddle.minX = 240 - 100;
-        this.cpuPaddle.minY = 40;
-        this.cpuPaddle.width = 80;
-        this.cpuPaddle.height = 30;
-        this.cpuPaddle.color = [0, 0, 255];
-
-        this.test = new Box();
-        this.test.minX = 240;
-        this.test.minY = 40;
-        this.test.width = 80;
-        this.test.height = 30;
-        this.test.color = [0, 0, 255];
+        this.paddle.isBreakable = false;
+        this.paddle.color = [255, 255, 255];       
 
         this.blocks = [];
         for(let i = 0; i < 5; i++) {
@@ -94,15 +78,15 @@ export class Breakout {
     update() {
         // Update the obstacle using keyboard info
         if (this.keyMap['ArrowLeft']) {
-            this.obstacle.minX -= 5;
-            if (this.obstacle.minX < 0) {
-                this.obstacle.minX = 0;
+            this.paddle.minX -= 5;
+            if (this.paddle.minX < 0) {
+                this.paddle.minX = 0;
             }
         }
         if (this.keyMap['ArrowRight']) {
-            this.obstacle.minX += 5;
-            if (this.obstacle.minX + this.obstacle.width > this.canvas.width) {
-                this.obstacle.minX = this.canvas.width - this.obstacle.width;
+            this.paddle.minX += 5;
+            if (this.paddle.minX + this.paddle.width > this.canvas.width) {
+                this.paddle.minX = this.canvas.width - this.paddle.width;
             }
         }
         
@@ -115,7 +99,7 @@ export class Breakout {
         }
 
         // Update the box (move, bounce, etc. according to box.xVel and box.yVel)
-        let obstacles = [this.obstacle, this.cpuPaddle, this.test];
+        let obstacles = [this.paddle];
         for(let i = 0; i < this.blocks.length; i++) {
             obstacles.push(this.blocks[i]);
         }
@@ -191,9 +175,7 @@ export class Breakout {
         
         // Draw the box
         this.ball.draw(this.ctx);
-        this.obstacle.draw(this.ctx);
-        this.cpuPaddle.draw(this.ctx);
-        this.test.draw(this.ctx);
+        this.paddle.draw(this.ctx);
         for(let i = 0; i < this.blocks.length; i++) {
             this.blocks[i].draw(this.ctx);
         }
@@ -249,7 +231,9 @@ class Box {
             if (this.intersects(o)) {
                 // undo the step that caused the collision
                 this.minX -= this.xVel;
-                
+                if(o.isBreakable === true) {
+                    o.randomizeColor();
+                }
                 // reverse xVel to bounce
                 this.xVel *= -1;
                 
@@ -264,7 +248,7 @@ class Box {
             if (this.intersects(o)) {
                 // undo the step that caused the collision
                 this.minY -= this.yVel;
-                if(o.isBreakable) {
+                if(o.isBreakable === true) {
                     o.randomizeColor();
                 }
                 // reverse yVel to bounce
