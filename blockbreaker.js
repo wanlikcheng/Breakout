@@ -35,8 +35,8 @@ export class Breakout {
         this.paddle.isBreakable = false;
         this.paddle.color = [255, 255, 255];       
 
-        let rows = 4;
-        let cols = 10;
+        let rows = 1;
+        let cols = 3;
         this.blocks = [];
         // 4 rows, by 10 cols of blocks
         for(let i = 0; i < rows; i++) {
@@ -65,6 +65,52 @@ export class Breakout {
 
                 
     }
+
+    resetGame() {
+        // Reset the ball position
+        this.ball.minX = this.canvas.width / 2;
+        this.ball.minY = 200;
+        this.ball.xVel = 3;
+        this.ball.yVel = 3;
+        
+        // Reset the paddle position
+        this.paddle.minX = this.canvas.width / 2 - 55;
+        this.paddle.minY = this.canvas.height - 50;
+        
+        // Reset the block positions and colors
+        let rows = 1;
+        let cols = 3;
+        for(let i = 0; i < rows; i++) {
+            let spacing = 35;
+            for(let j = 0; j < cols; j++) {
+                this.blocks[i * cols + j].minX = 10 + j * 62;
+                this.blocks[i * cols + j].minY = 45 + i * spacing;
+                this.blocks[i * cols + j].randomizeColor();
+                this.blocks[i * cols + j].isActive = true;
+            }
+        }
+        
+        // Reset game state variables
+        this.gameOver = false;
+        this.paused = false;
+    }
+
+    resetBall() {
+        // Reset the ball position
+        this.ball.minX = this.canvas.width / 2;
+        this.ball.minY = 200;
+        this.ball.xVel = 3;
+        this.ball.yVel = 3;
+        
+        // Reset the paddle position
+        this.paddle.minX = this.canvas.width / 2 - 55;
+        this.paddle.minY = this.canvas.height - 50;
+
+        // Reset game state variables
+        this.gameOver = false;
+        this.paused = false;
+    }
+      
     
     mainLoop() {
         // Compute the FPS
@@ -142,9 +188,9 @@ export class Breakout {
         rightEdge.height = this.canvas.height;
         obstacles.push(rightEdge);
         
-        this.ball.update(obstacles);
-        console.log("Update:", obstacles)
-        console.log("Blocks:", this.blocks, this.blocks.length)
+        // this.ball.update(obstacles);
+        // console.log("Update:", obstacles)
+        // console.log("Blocks:", this.blocks, this.blocks.length)
 
 
         // UNCOMMENT this for loss mechanism
@@ -153,6 +199,7 @@ export class Breakout {
         //     // ball at the bottom
         //     this.gameOver = true;
         //     this.winner = 2;
+        //     // this.resetBall();
         // }
 
         let total = 0;
@@ -165,9 +212,14 @@ export class Breakout {
                 this.gameOver = true;
                 this.winner = 1;
                 console.log("all broken")
+                this.resetGame();
             }
             console.log("total blocks count:", total, "blocks length:", this.blocks.length);
         }
+
+        this.ball.update(obstacles);
+        console.log("Update:", obstacles)
+        console.log("Blocks:", this.blocks, this.blocks.length)
 
     }
     
@@ -193,7 +245,8 @@ export class Breakout {
             }
             this.ctx.font = "30px serif";
             this.ctx.textAlign = "center";
-            this.ctx.fillText(x, this.canvas.width/2, this.canvas.height/2)            
+            this.ctx.fillText(x, this.canvas.width/2, this.canvas.height/2)   
+                     
         }
         
         // Draw the box
