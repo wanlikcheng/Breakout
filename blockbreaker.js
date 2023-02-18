@@ -174,12 +174,12 @@ export class Breakout {
         obstacles.push(topEdge);
         
         // COMMENT this for loss mechanism
-        const bottomEdge = new Box();
-        bottomEdge.minX = 0;
-        bottomEdge.minY = this.canvas.height;
-        bottomEdge.width = this.canvas.width;
-        bottomEdge.height = 10;
-        obstacles.push(bottomEdge);
+        // const bottomEdge = new Box();
+        // bottomEdge.minX = 0;
+        // bottomEdge.minY = this.canvas.height;
+        // bottomEdge.width = this.canvas.width;
+        // bottomEdge.height = 10;
+        // obstacles.push(bottomEdge);
 
         const leftEdge = new Box();
         leftEdge.minX = -10;
@@ -202,12 +202,15 @@ export class Breakout {
 
         // UNCOMMENT this for loss mechanism
         // Check for winning
-        // if ((this.ball.minY + this.ball.height) > this.canvas.height) {
-        //     // ball at the bottom
-        //     this.gameOver = true;
-        //     this.winner = 2;
-        //     // this.resetBall();
-        // }
+        if ((this.ball.minY + this.ball.height) > this.canvas.height) {
+            // ball at the bottom
+            // this.gameOver = true;
+            this.winner = 2;
+            this.replayGame = true;
+            this.resetGame();
+            // this.resetBall();
+
+        }
 
         // check if game is over
         let total = 0;
@@ -244,8 +247,16 @@ export class Breakout {
         }
 
         if (this.replayGame) {
+
+            let x = "YOU LOSE";
+            this.ctx.fillStyle = 'rgb(255,0,0)';
+            if (this.winner == 1) {
+                x = "YOU WIN";
+                this.ctx.fillStyle = 'rgb(0,255,0)';
+            }
             this.ctx.font = "30px serif";
-            this.ctx.textAlign = "center";            
+            this.ctx.textAlign = "center";
+            this.ctx.fillText(x, this.canvas.width/2, this.canvas.height/2)           
             this.ctx.fillStyle = "rgb(30,144,255)";
             this.ctx.fillText("PRESS 'R' TO RESTART", this.canvas.width/2, this.canvas.height/2 + 50);
         }
@@ -253,7 +264,7 @@ export class Breakout {
         // potentially draw victory text
         if (this.gameOver) {
             let x = "YOU LOSE";
-            this.ctx.fillStyle = 'rgb(255,255,255)';
+            this.ctx.fillStyle = 'rgb(255,0,0)';
             if (this.winner == 1) {
                 x = "YOU WIN";
                 this.ctx.fillStyle = 'rgb(0,255,0)';
