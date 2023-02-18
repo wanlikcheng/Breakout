@@ -35,21 +35,23 @@ export class Breakout {
         this.paddle.isBreakable = false;
         this.paddle.color = [255, 255, 255];       
 
+        let rows = 1;
+        let cols = 3;
         this.blocks = [];
-        // change i to 10 for whole row
-        for(let i = 0; i < 4; i++) {
+        // 4 rows, by 10 cols of blocks
+        for(let i = 0; i < rows; i++) {
             let spacing = 18
-            for(let j = 0; j < 10; j++) {
-                this.blocks[i * 10 + j] = new Box();
-                this.blocks[i * 10 + j].minX = 10 + j * 62;
-                this.blocks[i * 10 + j].minY = 45 + i * spacing;
-                this.blocks[i * 10 + j].width = 60;
-                this.blocks[i * 10 + j].height = 15;
-                this.blocks[i * 10 + j].isPaddle = false; // for paddle
-                this.blocks[i * 10 + j].isBall = false; // for ball
-                this.blocks[i * 10 + j].isBreakable = true; // for blocks
-                this.blocks[i * 10 + j].isActive = true; // for blocks
-                this.blocks[i * 10 + j].randomizeColor();
+            for(let j = 0; j < cols; j++) {
+                this.blocks[i * cols + j] = new Box();
+                this.blocks[i * cols + j].minX = 10 + j * 62;
+                this.blocks[i * cols + j].minY = 45 + i * spacing;
+                this.blocks[i * cols + j].width = 60;
+                this.blocks[i * cols + j].height = 15;
+                this.blocks[i * cols + j].isPaddle = false; // for paddle
+                this.blocks[i * cols + j].isBall = false; // for ball
+                this.blocks[i * cols + j].isBreakable = true; // for blocks
+                this.blocks[i * cols + j].isActive = true; // for blocks
+                this.blocks[i * cols + j].randomizeColor();
             }
         }
 
@@ -118,7 +120,7 @@ export class Breakout {
         topEdge.height = 10;
         obstacles.push(topEdge);
         
-        // comment this for loss mechanism
+        // COMMENT this for loss mechanism
         const bottomEdge = new Box();
         bottomEdge.minX = 0;
         bottomEdge.minY = this.canvas.height;
@@ -145,13 +147,27 @@ export class Breakout {
         console.log("Blocks:", this.blocks, this.blocks.length)
 
 
-        // uncomment this for loss mechanism
+        // UNCOMMENT this for loss mechanism
         // Check for winning
         // if ((this.ball.minY + this.ball.height) > this.canvas.height) {
         //     // ball at the bottom
         //     this.gameOver = true;
         //     this.winner = 2;
         // }
+
+        let total = 0;
+        for(let i = 0; i < this.blocks.length; i++) {
+            
+            if(this.blocks[i].minY === -1000) {
+                total++;
+            }
+            if(total === this.blocks.length) {
+                this.gameOver = true;
+                this.winner = 1;
+                console.log("all broken")
+            }
+            console.log("total blocks count:", total, "blocks length:", this.blocks.length);
+        }
 
     }
     
