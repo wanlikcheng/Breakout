@@ -62,8 +62,7 @@ export class Breakout {
         // state variables
         this.gameOver = false;
         this.paused = false;
-
-                
+        this.replayGame = false;
     }
 
     resetGame() {
@@ -92,7 +91,8 @@ export class Breakout {
         
         // Reset game state variables
         this.gameOver = false;
-        this.paused = false;
+        // this.paused = true;
+        this.replayGame = true;;
     }
 
     resetBall() {
@@ -110,7 +110,6 @@ export class Breakout {
         this.gameOver = false;
         this.paused = false;
     }
-      
     
     mainLoop() {
         // Compute the FPS
@@ -149,6 +148,14 @@ export class Breakout {
         }
         
         if (this.paused) {
+            return;
+        }
+
+        if (this.keyMap['r']) {
+            this.replayGame = !this.replayGame;
+        }
+        
+        if (this.replayGame) {
             return;
         }
 
@@ -202,14 +209,15 @@ export class Breakout {
         //     // this.resetBall();
         // }
 
+        // check if game is over
         let total = 0;
         for(let i = 0; i < this.blocks.length; i++) {
-            
             if(this.blocks[i].minY === -1000) {
                 total++;
             }
             if(total === this.blocks.length) {
                 this.gameOver = true;
+                this.replayGame = true;
                 this.winner = 1;
                 console.log("all broken")
                 this.resetGame();
@@ -233,6 +241,13 @@ export class Breakout {
             this.ctx.textAlign = "center";            
             this.ctx.fillStyle = "rgb(192,192,192)";
             this.ctx.fillText("PAUSED", this.canvas.width/2, this.canvas.height/2);
+        }
+
+        if (this.replayGame) {
+            this.ctx.font = "30px serif";
+            this.ctx.textAlign = "center";            
+            this.ctx.fillStyle = "rgb(30,144,255)";
+            this.ctx.fillText("PRESS 'R' TO RESTART", this.canvas.width/2, this.canvas.height/2 + 50);
         }
 
         // potentially draw victory text
