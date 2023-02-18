@@ -59,6 +59,9 @@ export class Breakout {
         // prevDraw is a member variable used for throttling framerate
         this.prevDraw = 0;
         
+        // lives count
+        this.lives = 3;
+
         // state variables
         this.gameOver = false;
         this.paused = false;
@@ -205,10 +208,16 @@ export class Breakout {
         if ((this.ball.minY + this.ball.height) > this.canvas.height) {
             // ball at the bottom
             // this.gameOver = true;
-            this.winner = 2;
-            this.replayGame = true;
-            this.resetGame();
-            // this.resetBall();
+            this.lives--;
+            if(this.lives === 0) {
+                this.winner = 2;
+                this.replayGame = true;
+                this.resetGame();
+            }
+            // this.winner = 2;
+            // this.replayGame = true;
+            // this.resetGame();
+            this.resetBall();
 
         }
 
@@ -222,12 +231,9 @@ export class Breakout {
                 this.gameOver = true;
                 this.replayGame = true;
                 this.winner = 1;
-                console.log("all broken")
                 this.resetGame();
             }
-            console.log("total blocks count:", total, "blocks length:", this.blocks.length);
         }
-
         this.ball.update(obstacles);
         console.log("Update:", obstacles)
         console.log("Blocks:", this.blocks, this.blocks.length)
@@ -247,7 +253,6 @@ export class Breakout {
         }
 
         if (this.replayGame) {
-
             let x = "YOU LOSE";
             this.ctx.fillStyle = 'rgb(255,0,0)';
             if (this.winner == 1) {
