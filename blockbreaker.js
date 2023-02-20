@@ -277,7 +277,7 @@ export class Breakout {
             this.ctx.fillText("BC BREAKOUT", this.canvas.width/2, this.canvas.height/2);
             this.ctx.font = "15px serif";
             this.ctx.fillStyle = "rgb(207,16,32)";
-            this.ctx.fillText("Use the left and right arrow keys to control the ball", this.canvas.width/2, this.canvas.height/2 + textInterval);
+            this.ctx.fillText("Use the left and right arrow keys to control the paddle", this.canvas.width/2, this.canvas.height/2 + textInterval);
             this.ctx.fillText("Press 'P' to pause the game", this.canvas.width/2, this.canvas.height/2 + 2 * textInterval);
             this.ctx.fillText("Press 'Q' to play the game", this.canvas.width/2, this.canvas.height/2 + 3 * textInterval);
         }
