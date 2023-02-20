@@ -35,8 +35,8 @@ export class Breakout {
         this.paddle.isBreakable = false;
         this.paddle.color = [255, 255, 255];       
 
-        let rows = 1;
-        let cols = 3;
+        let rows = 4;
+        let cols = 10;
         this.blocks = [];
         // 4 rows, by 10 cols of blocks
         for(let i = 0; i < rows; i++) {
@@ -63,6 +63,7 @@ export class Breakout {
         this.lives = 3;
 
         // state variables
+        this.loadGame = true;
         this.gameOver = false;
         this.paused = false;
         this.replayGame = false;
@@ -156,10 +157,18 @@ export class Breakout {
         }
 
         if (this.keyMap['r']) {
-            this.replayGame = !this.replayGame;
+            this.replayGame = false;
         }
         
         if (this.replayGame) {
+            return;
+        }
+
+        if (this.keyMap['q']) {
+            this.loadGame = false;
+        }
+        
+        if (this.loadGame) {
             return;
         }
 
@@ -210,7 +219,6 @@ export class Breakout {
             // ball at the bottom
             // this.gameOver = true;
             this.lives--;
-            console.log(this.lives);
             if(this.lives === 0) {
                 this.winner = 2;
                 this.replayGame = true;
@@ -237,21 +245,41 @@ export class Breakout {
             }
         }
         this.ball.update(obstacles);
-        console.log("Update:", obstacles)
-        console.log("Blocks:", this.blocks, this.blocks.length)
+        // console.log("Update:", obstacles)
+        // console.log("Blocks:", this.blocks, this.blocks.length)
 
     }
     
     draw() {
         // clear background
         this.ctx.fillStyle = "rgb(10, 10, 10)";
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);        
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // lives left
+        this.ctx.font = "15px serif";
+        this.ctx.textAlign = "center";            
+        this.ctx.fillStyle = "rgb(255,215,0)";
+        this.ctx.fillText("LIVES: " + String(this.lives), this.canvas.width - 50, 30);
         
         if (this.paused) {
             this.ctx.font = "30px serif";
             this.ctx.textAlign = "center";            
             this.ctx.fillStyle = "rgb(192,192,192)";
             this.ctx.fillText("PAUSED", this.canvas.width/2, this.canvas.height/2);
+            this.ctx.fillText("PRESS 'P' TO RESUME", this.canvas.width/2, this.canvas.height/2 + 35);
+        }
+
+        if (this.loadGame) {
+            let textInterval = 20;
+            this.ctx.font = "30px serif";
+            this.ctx.textAlign = "center";            
+            this.ctx.fillStyle = "rgb(255,215,0)";
+            this.ctx.fillText("BC BREAKOUT", this.canvas.width/2, this.canvas.height/2);
+            this.ctx.font = "15px serif";
+            this.ctx.fillStyle = "rgb(207,16,32)";
+            this.ctx.fillText("Use the left and right arrow keys to control the ball", this.canvas.width/2, this.canvas.height/2 + textInterval);
+            this.ctx.fillText("Press 'P' to pause the game", this.canvas.width/2, this.canvas.height/2 + 2 * textInterval);
+            this.ctx.fillText("Press 'Q' to play the game", this.canvas.width/2, this.canvas.height/2 + 3 * textInterval);
         }
 
         if (this.replayGame) {
@@ -343,7 +371,8 @@ class Box {
 
     update(obstacles) {
         // move x and y
-
+        console.log(this.isBall, this.xVel, this.yVel)
+        
         // move x
         this.minX += this.xVel;
 
@@ -353,8 +382,13 @@ class Box {
                 this.minX -= this.xVel;
                 this.playSound();
                 if(o.isBreakable === true) {
-                    o.randomizeColor();
                     o.minY = -1000;
+                }
+                // handling ball drop
+                if(this.xVel == 0) {
+                    o.xVel += 3;
+                    console.log("wtf")
+                    // this.yVel = 3;
                 }
                 // reverse xVel to bounce
                 this.xVel *= -1;
@@ -372,7 +406,6 @@ class Box {
                 // undo the step that caused the collision
                 this.minY -= this.yVel;
                 if(o.isBreakable === true) {
-                    o.randomizeColor();
                     o.minY = -1000;
                 }
                 // reverse yVel to bounce
