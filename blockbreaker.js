@@ -5,7 +5,7 @@ export class Breakout {
         // save canvas and keyMap as members
         this.canvas = canvas;
         this.keyMap = keyMap;
-        
+
         // set size of canvas
         canvas.width = 640;
         canvas.height = 480;
@@ -295,6 +295,9 @@ export class Breakout {
 }
 
 class Box {
+
+    sound = document.getElementById("soundeffect");
+
     constructor() {
         this.minX = 10;
         this.minY = 30;
@@ -313,6 +316,14 @@ class Box {
         this.color[0] = Math.round(Math.random()*255);
         this.color[1] = Math.round(Math.random()*255);
         this.color[2] = Math.round(Math.random()*255);
+    }
+
+    playSound() {
+        this.sound.play();
+    }
+
+    pauseSound() {
+        this.sound.pause();
     }
     
     intersects(box2) {
@@ -340,6 +351,7 @@ class Box {
             if (this.intersects(o)) {
                 // undo the step that caused the collision
                 this.minX -= this.xVel;
+                this.playSound();
                 if(o.isBreakable === true) {
                     o.randomizeColor();
                     o.minY = -1000;
@@ -356,6 +368,7 @@ class Box {
 
         for (const o of obstacles) {
             if (this.intersects(o)) {
+                this.playSound();
                 // undo the step that caused the collision
                 this.minY -= this.yVel;
                 if(o.isBreakable === true) {
@@ -364,7 +377,6 @@ class Box {
                 }
                 // reverse yVel to bounce
                 this.yVel *= -1;
-                
                 // this.randomizeColor();
             }   
         }
