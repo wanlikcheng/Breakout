@@ -16,7 +16,7 @@ export class Breakout {
         // Set up the box (bouncing around the screen)
         // BALL BOX
         this.ball = new Box();
-        this.ball.xVel = 3; // units: pixels per frame
+        this.ball.xVel = 0; // units: pixels per frame
         this.ball.yVel = 3;
         this.ball.minX = canvas.width / 2;
         this.ball.minY = 200;
@@ -81,8 +81,8 @@ export class Breakout {
         this.paddle.minY = this.canvas.height - 50;
         
         // Reset the block positions and colors
-        let rows = 1;
-        let cols = 3;
+        let rows = 4;
+        let cols = 10;
         for(let i = 0; i < rows; i++) {
             let spacing = 35;
             for(let j = 0; j < cols; j++) {
@@ -104,7 +104,7 @@ export class Breakout {
         // Reset the ball position
         this.ball.minX = this.canvas.width / 2;
         this.ball.minY = 200;
-        this.ball.xVel = 3;
+        this.ball.xVel = 0;
         this.ball.yVel = 3;
         
         // Reset the paddle position
@@ -340,6 +340,10 @@ class Box {
         this.color = [255, 0, 0];
     }
 
+    ballVelocity() {
+        return this.xVel = 3;
+    }
+
     randomizeColor() {
         this.color[0] = Math.round(Math.random()*255);
         this.color[1] = Math.round(Math.random()*255);
@@ -371,7 +375,7 @@ class Box {
 
     update(obstacles) {
         // move x and y
-        console.log(this.isBall, this.xVel, this.yVel)
+        console.log(this.isBall, (this.xVel), this.yVel)
         
         // move x
         this.minX += this.xVel;
@@ -384,12 +388,7 @@ class Box {
                 if(o.isBreakable === true) {
                     o.minY = -1000;
                 }
-                // handling ball drop
-                if(this.xVel == 0) {
-                    o.xVel += 3;
-                    console.log("wtf")
-                    // this.yVel = 3;
-                }
+
                 // reverse xVel to bounce
                 this.xVel *= -1;
                 
@@ -402,6 +401,11 @@ class Box {
 
         for (const o of obstacles) {
             if (this.intersects(o)) {
+                // handling ball drop
+                // this.ballVelocity();
+                if(this.xVel == 0) {
+                    this.ballVelocity();
+                }
                 this.playSound();
                 // undo the step that caused the collision
                 this.minY -= this.yVel;
