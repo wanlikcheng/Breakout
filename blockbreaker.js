@@ -17,7 +17,7 @@ export class Breakout {
         // BALL BOX
         this.ball = new Box();
         this.ball.xVel = 0; // units: pixels per frame
-        this.ball.yVel = 3;
+        this.ball.yVel = 4;
         this.ball.minX = canvas.width / 2;
         this.ball.minY = 200;
         this.ball.width = 15;
@@ -31,7 +31,7 @@ export class Breakout {
         this.paddle.minY = canvas.height - 50;
         this.paddle.width = 120;
         this.paddle.height = 10;
-        this.isPaddle = true;
+        this.paddle.isPaddle = true;
         this.paddle.isBreakable = false;
         this.paddle.color = [255, 255, 255];       
 
@@ -73,12 +73,13 @@ export class Breakout {
         // Reset the ball position
         this.ball.minX = this.canvas.width / 2;
         this.ball.minY = 200;
-        this.ball.xVel = 3;
-        this.ball.yVel = 3;
+        this.ball.xVel = 0;
+        this.ball.yVel = 4;
         
         // Reset the paddle position
         this.paddle.minX = this.canvas.width / 2 - 55;
         this.paddle.minY = this.canvas.height - 50;
+        this.isPaddle = true;
         
         // Reset the block positions and colors
         let rows = 4;
@@ -105,11 +106,12 @@ export class Breakout {
         this.ball.minX = this.canvas.width / 2;
         this.ball.minY = 200;
         this.ball.xVel = 0;
-        this.ball.yVel = 3;
+        this.ball.yVel = 4;
         
         // Reset the paddle position
         this.paddle.minX = this.canvas.width / 2 - 55;
         this.paddle.minY = this.canvas.height - 50;
+        this.isPaddle = true;
 
         // Reset game state variables
         this.gameOver = false;
@@ -136,13 +138,13 @@ export class Breakout {
     update() {
         // Update the obstacle using keyboard info
         if (this.keyMap['ArrowLeft']) {
-            this.paddle.minX -= 5;
+            this.paddle.minX -= 6;
             if (this.paddle.minX < 0) {
                 this.paddle.minX = 0;
             }
         }
         if (this.keyMap['ArrowRight']) {
-            this.paddle.minX += 5;
+            this.paddle.minX += 6;
             if (this.paddle.minX + this.paddle.width > this.canvas.width) {
                 this.paddle.minX = this.canvas.width - this.paddle.width;
             }
@@ -341,7 +343,7 @@ class Box {
     }
 
     ballVelocity() {
-        return this.xVel = 3;
+        return this.xVel = 4;
     }
 
     randomizeColor() {
@@ -375,20 +377,23 @@ class Box {
 
     update(obstacles) {
         // move x and y
-        console.log(this.isBall, (this.xVel), this.yVel)
-        
         // move x
         this.minX += this.xVel;
 
         for (const o of obstacles) {
             if (this.intersects(o)) {
+                console.log(o.isPaddle, o)
                 // undo the step that caused the collision
                 this.minX -= this.xVel;
                 this.playSound();
                 if(o.isBreakable === true) {
                     o.minY = -1000;
                 }
-
+                if(o.isPaddle) {
+                    // this.randomizeColor();
+                    console.log("ball", this.minX, this.minY);
+                    console.log("paddle", o.minX, o.minY)
+                }
                 // reverse xVel to bounce
                 this.xVel *= -1;
                 
@@ -402,7 +407,6 @@ class Box {
         for (const o of obstacles) {
             if (this.intersects(o)) {
                 // handling ball drop
-                // this.ballVelocity();
                 if(this.xVel == 0) {
                     this.ballVelocity();
                 }
@@ -411,6 +415,18 @@ class Box {
                 this.minY -= this.yVel;
                 if(o.isBreakable === true) {
                     o.minY = -1000;
+                }
+                // control bounce left or right
+                if(o.isPaddle) {
+                    // this.randomizeColor();
+                    console.log("ball", this.minX, this.minY);
+                    console.log("paddle", o.minX, o.minY)
+                    if(this.minX + 45 < this.minX) {
+                        console.log("bounce left?")
+                    }
+                    else {
+                        console.log("bounce right?")
+                    }
                 }
                 // reverse yVel to bounce
                 this.yVel *= -1;
