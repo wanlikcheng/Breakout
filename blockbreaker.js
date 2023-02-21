@@ -389,13 +389,27 @@ class Box {
                 if(o.isBreakable === true) {
                     o.minY = -1000;
                 }
+                // control bounce left or right
                 if(o.isPaddle) {
-                    // this.randomizeColor();
+                    console.log("move x:", this.xVel, this.yVel)
                     console.log("ball", this.minX, this.minY);
                     console.log("paddle", o.minX, o.minY)
+                    if(this.minX < o.minX + 55) {
+                        console.log("bounce left?")
+                        if(this.xVel > 0) {
+                            console.log("hello")
+                            this.xVel *= -1;
+                        }
+                    }
+                    else {
+                        console.log("bounce right?")
+                        this.xVel = Math.abs(this.xVel);
+                    }
                 }
-                // reverse xVel to bounce
-                this.xVel *= -1;
+                else {
+                    // reverse xVel to bounce
+                    this.xVel *= -1;
+                }
                 
                 // this.randomizeColor();
             }
@@ -418,14 +432,20 @@ class Box {
                 }
                 // control bounce left or right
                 if(o.isPaddle) {
-                    // this.randomizeColor();
+                    console.log("move y:", this.xVel, this.yVel)
                     console.log("ball", this.minX, this.minY);
                     console.log("paddle", o.minX, o.minY)
-                    if(this.minX + 45 < this.minX) {
+                    if(this.minX < o.minX + 55) {
                         console.log("bounce left?")
+                        if(this.xVel > 0) {
+                            console.log("hello")
+                            this.xVel *= -1;
+                        }
+                        // this.xVel *= -1;
                     }
                     else {
                         console.log("bounce right?")
+                        this.xVel = Math.abs(this.xVel);
                     }
                 }
                 // reverse yVel to bounce
